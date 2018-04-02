@@ -1,53 +1,3 @@
-#include "stdafx.h"
-#include "AI_Logic.h"
-#include <time.h>
-#include <stdlib.h>
-
-enum BetAction{
-	AC_FOLD = -1,
-	AC_CALL,
-	AC_RAISE1,
-	AC_RAISE2,
-	AC_RAISE3,
-	AC_RAISE5,
-	AC_RAISE10
-};
-
-Player::Player(){
-	m_iLastAction = 0;
-	m_bSetCom = false;
-	m_iWeight = 0;
-}
-
-Player::~Player(){
-
-}
-
-void AIPlayer::PlayerFold(int Seat){
-	m_iAlive[Seat] = false;
-}
-
-void AIPlayer::SetAlivePlayer(int Seats[], int AISeat){
-	memset(m_iAlive, 0, 5);
-	for (int i = 0; i < sizeof(Seats); i++){
-		if (Seats[i] != -1){
-			m_iAlive[Seats[i]] = true;
-		}
-	}
-	m_iAISeat = AISeat;
-	m_iAlive[AISeat] = false;
-}
-
-void AIPlayer::SetPlayerInfo(BYTE PlayerCards[]){
-	m_iWinCount = 0;
-	pos = FirstTime;
-	memset(m_iOtherCount, 0, sizeof(int)*AllPos);
-	memcpy(m_bHoleCards, PlayerCards, 3);
-	m_iWeight = m_logic.CalcWeight(m_bHoleCards);
-	m_iWinCount = CalcAIWinCount();
-	m_bSetCom = true;
-}
-
 bool JudgeLegal(int iCard[], int in[], int now){
 	bool com = true;
 	for (int i = 0; i <= now; i++){
@@ -61,7 +11,7 @@ bool JudgeLegal(int iCard[], int in[], int now){
 }
 
 int Times(int a, int b){
-	//a==1Ê±×Ô¼ºÊÇÕ¨  ÔçÒÑ·µ»Ø
+	//a==1æ—¶è‡ªå·±æ˜¯ç‚¸  æ—©å·²è¿”å›
 	if (a == 2 && b == 1){ return 2; }
 	if (a == 3 && b == 1){ return 3; }
 	if (a == 4 && b == 1){ return 4; }
@@ -85,7 +35,7 @@ int AIPlayer::GetTimes(int iCards[], int in[]){
 	int ti = Times(iCards[in[0]], 1)*Times(iCards[in[1]], 1)*Times(iCards[in[2]], 1);
 	//2 3 4   3 3 3 
 	if (ti == 24 || ti == 27){ ti = ti - 4 + m_iColCount; }
-	//2 4 4  /2ÖÖÍ¬»¨
+	//2 4 4  /2ç§åŒèŠ±
 	else if (ti == 32){ ti -= 2; }
 	//3 3 4
 	else if (ti == 36){
@@ -116,7 +66,7 @@ void AIPlayer::OtherPosWeightCount(int Weight, int count){
 	}
 }
 
-//»ØËİ  Èİ³âÔ­Àí
+//å›æº¯  å®¹æ–¥åŸç†
 int AIPlayer::GetCount(int iCards[], int in[], int now){
 	int Count = 0;
 	if (now == 0){ in[now] = 1; }
@@ -170,15 +120,15 @@ int AIPlayer::GetCount(bool bCards[4][14], int in[], int now, int col){
 int AIPlayer::CalcAIWinCount(){
 	int count = 0;
 	m_iMinus = 0;
-	//¿ÉÒÔÏÈ´¦Àí±¾ÉíÎª±ª×ÓµÄÇé¿ö
+	//å¯ä»¥å…ˆå¤„ç†æœ¬èº«ä¸ºè±¹å­çš„æƒ…å†µ
 	if (m_iWeight > (CT_FOUR << 12)){
 		int val = (m_iWeight >> 8) % 16;
 		count = (14 - val) * 4;
 		return MAXCOUNT - (count + 60);
 	}
 
-	//Á½ÖÖÊı¾İĞÎÊ½
-	//Í¬»¨ĞèÒªµÄÊı¾İ½á¹¹
+	//ä¸¤ç§æ•°æ®å½¢å¼
+	//åŒèŠ±éœ€è¦çš„æ•°æ®ç»“æ„
 	bool bCards[4][14];
 	memset(bCards, 1, 56);
 	int iCards[14];
@@ -219,41 +169,4 @@ int AIPlayer::CalcAIWinCount(){
 	count += GetCount(iCards, in, 0);
 	count += (m_iMinus / 3);
 	return count;
-}
-
-int AIPlayer::GetNextComparePlayerSeat(){
-	return m_iNextComSeat;
-}
-
-int AIPlayer::DecideAction(int round){
-	int Action = 0;
-	int increasing = 0;
-
-	if (round == 1){ pos = FirstTime; }
-	else if (round < 3){ pos = Over10; increasing = (m_iOtherCount[OverA] - m_iOtherCount[Over10]) / 2 * (round - 2); }
-	else if (round < 10){ pos = OverA; increasing = (m_iOtherCount[Pair5] - m_iOtherCount[OverA]) / 5 * (round - 5); }
-	else if (round < 15){ pos = Pair5; increasing = (m_iOtherCount[PairK] - m_iOtherCount[Pair5]) / 5 * (round - 5); }
-	else{ pos = PairK; }
-	if (m_iWinCount == 0){ return AC_RAISE10; }
-	srand((unsigned)time(NULL));
-	int sign = rand() % 2;
-	if (round>4){ if (sign == 0){ sign = -1; } }
-	else{ sign = 1; }
-	int Num = (rand() % (MAXCOUNT - m_iOtherCount[pos])) * sign + m_iOtherCount[pos] + increasing;
-	if (Num > m_iWinCount){
-		Action = AC_FOLD;
-	}
-	else{
-		int in = (MAXCOUNT - Num) / 5;
-		Action = (m_iWinCount - Num) / in + AC_CALL;
-		if (Action == 1 || Action == 2){
-			for (int i = 0; i < 5; i++){
-				if (m_iAlive[i]){
-					m_iNextComSeat = i;
-					break;
-				}
-			}
-		}
-	}
-	return Action;
 }
