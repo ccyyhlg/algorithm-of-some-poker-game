@@ -1,30 +1,30 @@
 #define			NORMAL_TYPE				0				//正常牌型
 #define			THREEFLUSH				1				//三同花
-#define			THREESTRIGHT			2				//三顺子
+#define			THREESTRIGHT				2				//三顺子
 #define			SIXPAIRS				3				//6对
-#define			FIVEPAIRSANDTHREE		4				//5对3条
+#define			FIVEPAIRSANDTHREE			4				//5对3条
 #define			FOUR_THREE				5				//4组三条
-#define			ALLSAMECOLOR			6				//凑一色
+#define			ALLSAMECOLOR				6				//凑一色
 #define			ALLLOW					7				//全小
 #define			ALLHIGH					8				//全大
 #define			THREE_BOMB				9				//三分天下(4个炸)
-#define			THREE_STRIGHTFLUSH		10				//三同花顺
+#define			THREE_STRIGHTFLUSH			10				//三同花顺
 #define			ROYALCARD				11				//十二皇族
 #define			LOWDRAGON				12				//一条龙
 #define			BLACKDRAGON				13				//青龙
 
-#define			CT_INVALIDCARD				0x00			//相公
+#define			CT_INVALIDCARD					0x00			//相公
 #define			CT_HIGHCARD					0x01			//乌龙
 #define			CT_ONEPAIR					0x02			//对子	
 #define			CT_TWOPAIRS					0x03			//两对
 #define			CT_THREE					0x04			//三张
 #define			CT_STRIGHT					0x05			//顺子
 #define			CT_FLUSH					0x06			//同花
-#define			CT_FULLHOUSE				0x07			//葫芦
+#define			CT_FULLHOUSE					0x07			//葫芦
 #define			CT_FOUR						0x08			//铁支（炸）
-#define			CT_FLUSHSTRIGHT				0x09			//同花顺
-#define			CT_THREE_FIRST				0x0a			//三冲
-#define			CT_FULLHOUSE_MID			0x0b			//中墩葫芦
+#define			CT_FLUSHSTRIGHT					0x09			//同花顺
+#define			CT_THREE_FIRST					0x0a			//三冲
+#define			CT_FULLHOUSE_MID				0x0b			//中墩葫芦
 
 #define SELECTTHREE(st) for(int va1=14;va1>1;va1--){ \
 for (int j = 0; j < 4; j++){\
