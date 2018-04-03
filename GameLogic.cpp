@@ -212,7 +212,7 @@ void CGameLogic::BestSequence(std::list<BYTE> &card, unsigned int We[], int Laye
 					int cc = 0;
 					for (int k = 0; k < 4; k++){
 						if (((1 << k) & h[v - i]) == (1 << k)){
-							stcards[i][cc++] = (k << 4) + v - i;
+							stcards[i][cc++] = (k << 4) + ((v - i) == 14 ? 1 : v - i);
 						}
 					}
 				}
