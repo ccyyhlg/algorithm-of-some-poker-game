@@ -273,7 +273,7 @@ void CGameLogic::BestSequence(std::list<BYTE> &card, unsigned int We[], int Laye
 					int cm = C24[j];
 					while (cm){
 						if (cm % 2 != 0){
-							us.push_back((cc << 4) + i);
+							us.push_back((cc << 4) + (i == 14 ? 1 : i));
 						}
 						cc++;
 						cm = cm >> 1;
@@ -285,7 +285,7 @@ void CGameLogic::BestSequence(std::list<BYTE> &card, unsigned int We[], int Laye
 								int cm2 = C24[y];
 								while (cm2){
 									if (cm2 % 2){
-										us.push_back((cc2 << 4) + x);
+										us.push_back((cc2 << 4) + (x == 14 ? 1 : x));
 									}
 									cc2++;
 									cm2 = cm2 >> 1;
