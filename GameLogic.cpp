@@ -1,3 +1,4 @@
+//@author ccyyhlg
 #define			NORMAL_TYPE				0				//正常牌型
 #define			THREEFLUSH				1				//三同花
 #define			THREESTRIGHT				2				//三顺子
