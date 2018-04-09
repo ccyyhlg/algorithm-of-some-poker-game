@@ -86,6 +86,7 @@ void delete2prime(std::list<int> &addnum, std::list<int>&mulnum, std::list<int> 
 	while (twoadd != TwoPrimeAdd.end()){
 		for (int v1 = (*twoadd)/2; v1 > 1; v1--){
 			int v2 = *twoadd - v1;
+			if (v2 > MAXNUM){ break; }
 			AllPrimePos.push_back(v2*v1);
 		}
 		twoadd++;
