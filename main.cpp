@@ -22,47 +22,6 @@ bool TwoAddNumNotPrime(std::list<int> prime, int num){
 	}
 }
 
-bool TwoMulNumOnlyOnePos(std::list<int> prime, int num){
-	std::list<int>::iterator ito = prime.begin();
-	int cc = 0;
-	int mi, ma;
-	for (; ito!=prime.end(); ito++){
-		int v = num / (*ito);
-		if (v < 2){ break; }
-		if (v * (*ito) == num){
-			if (TwoAddNumNotPrime(prime, (*ito) + v)){
-				cc++;
-				mi = (v>(*ito)) ? *ito : v;
-				ma = (v<(*ito)) ? *ito : v;
-			}
-		}
-		if (cc > 1){ return false; }
-	}
-	if (cc == 1){ 
-		std::cout << mi << " " << ma << " "; 
-		return true; }
-	else return false;
-}
-
-bool TwoAddNumOnlyOnePos(std::list<int> prime, int num){
-	int cc = 0;
-	int mi, ma;
-	for (int i = 2; i < num;i++){
-		int v = num - i;
-		if (v < i){ break; }
-		if (TwoMulNumOnlyOnePos(prime, i * v)){
-			cc++;
-			mi = (v > i) ? i : v;
-			ma = (v < i) ? i : v;
-		}
-		if (cc > 1){ return false; }
-	}
-	if (cc == 1){ 
-		std::cout << mi << " " << ma << " "; 
-		return true; }
-	else return false;
-}
-
 bool JudgeNumInList(std::list<int> &listnum, int v){
 	std::list<int>::iterator ito = listnum.begin();
 
@@ -156,36 +115,6 @@ void delete2prime(std::list<int> &addnum, std::list<int>&mulnum, std::list<int> 
 	}
 }
 
-void OnlyOnePossible(std::list<int> &addnum, std::list<int>&mulnum, std::list<int> &prime){
-	std::list<int>::iterator p1 = prime.begin();
-
-	std::list<int>::iterator ito = mulnum.begin();
-	std::list<int>::iterator p;
-	
-	while (ito != mulnum.end()){
-		p = prime.begin();
-		int v = (*ito) / (*p);
-		int c = 0;
-		while ((*p) < MAXNUM && v > 1 ){
-			if ((*p)*v != (*ito)){
-				p++;
-				v = (*ito) / (*p);
-				continue;
-			}
-			else{
-				if (JudgeNumInList(addnum, (*p) + v)){
-					c++;
-				}
-				p++;
-				v = (*ito) / (*p);
-			}
-			if (c > 1){ break; }
-		}
-		if (c != 1){ ito = mulnum.erase(ito); }
-		else{ ito++; }
-	}
-}
-
 void OnlyOnePosInAdd(std::list<int> &addnum, std::list<int>&mulnum, std::list<int> &prime){
 	std::list<int>::iterator ito = addnum.begin();
 
@@ -205,52 +134,6 @@ void OnlyOnePosInAdd(std::list<int> &addnum, std::list<int>&mulnum, std::list<in
 		if (c != 1){ ito = addnum.erase(ito); }
 		else{ ito++; }
 	}
-}
-
-std::list<int> FirstAlgothm(std::list<int> prime){
-	std::list<int>::iterator ito;
-	std::list<int> fi;
-	for (int i = 8; i < MAXNUM; i++){
-		bool sui = true;
-		ito = prime.begin();
-		while ((*ito) < i){
-			int v = i - (*ito);
-			if (*ito > v){  break; }
-			std::list<int>::iterator ito2 = prime.end();
-			ito2--;
-			bool dp = false;
-			while (*ito2 >= v){
-				if (*ito2 == v){
-					dp = true;;
-					break;
-				}
-				else if (*ito2 < v){
-					break;
-				}
-				else{
-					ito2--;
-				}
-			}
-			if (dp){ sui = false; break; }
-			ito++;
-		}
-		if (sui){ fi.push_back(i); }
-	}
-	return fi;
-}
-
-std::list<int> SecondAlgothm(std::list<int> prime){
-	std::list<int>::iterator ito=prime.begin();
-	std::list<int> se;
-
-	for (int i = 2; i < MAXNUM; i++){
-		ito = prime.begin();
-		int v = i / (*ito);
-		if (v*(*ito) == i){
-
-		}
-	}
-	return se;
 }
 
 int main(){
